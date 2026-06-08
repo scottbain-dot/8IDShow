@@ -627,11 +627,12 @@ function copyAll(){
   });
   copyText(out); toast('All feedback copied');
 }
+function fbToLine(fb){ return (fb||'').split('\n').map(s=>s.replace(/^•\s*/,'').trim()).filter(Boolean).join('; '); }
 function exportCsv(){
   let rows=[['Project','Student','Level','Feedback']];
-  PROJECTS.forEach(p=>p.m.forEach(n=>{ const r=data[n]||{}; rows.push([p.t,n,r.level||'',(r.fb||'').replace(/\n/g,' / ')]); }));
-  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
-  const blob=new Blob([csv],{type:'text/csv'});
+  PROJECTS.forEach(p=>p.m.forEach(n=>{ const r=data[n]||{}; rows.push([p.t,n,r.level||'',fbToLine(r.fb)]); }));
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\r\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
   const a=document.createElement('a');
   a.href=URL.createObjectURL(blob); a.download='taking-action-grades.csv'; a.click();
   toast('CSV downloaded');
