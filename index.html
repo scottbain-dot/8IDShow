@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Taking Action — Showcase Grader</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --burgundy:#874b46;
+    --burgundy-dk:#5e332f;
+    --gold:#D4AF37;
+    --paper:#f6f0e8;
+    --card:#fffdf9;
+    --ink:#221b18;
+    --muted:#6f635c;
+    --line:#e4d9cc;
+    --adv:#2f7d52; --adv-bg:#e7f3ec;
+    --pro:#2b6e8f; --pro-bg:#e6f1f6;
+    --int:#b5841f; --int-bg:#fbf2dd;
+    --beg:#a64b3c; --beg-bg:#f8e9e5;
+    --shadow:0 1px 2px rgba(34,27,24,.06),0 8px 24px rgba(34,27,24,.08);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:'Hanken Grotesk',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.45;
+    padding-bottom:env(safe-area-inset-bottom);
+  }
+  .wrap{max-width:560px;margin:0 auto;padding:0 16px 120px}
+
+  /* Header */
+  header{
+    position:sticky;top:0;z-index:30;
+    background:linear-gradient(160deg,var(--burgundy),var(--burgundy-dk));
+    color:#fdf7ee;padding:14px 16px 12px;
+    box-shadow:0 4px 16px rgba(94,51,47,.25);
+  }
+  .hwrap{max-width:560px;margin:0 auto;display:flex;align-items:center;gap:12px}
+  .crest{width:38px;height:38px;border-radius:9px;flex:none;
+    background:radial-gradient(circle at 30% 30%,var(--gold),#a8861f);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces',serif;font-weight:700;color:var(--burgundy-dk);font-size:19px;
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
+  .htxt h1{font-family:'Fraunces',serif;font-weight:600;font-size:18px;margin:0;letter-spacing:.2px}
+  .htxt p{margin:1px 0 0;font-size:12px;opacity:.85;font-weight:500}
+  .prog{margin-left:auto;text-align:right;flex:none}
+  .prog .n{font-family:'Fraunces',serif;font-size:20px;font-weight:700;line-height:1;color:var(--gold)}
+  .prog .l{font-size:10.5px;opacity:.85;text-transform:uppercase;letter-spacing:.6px}
+  .bar{height:4px;background:rgba(255,255,255,.18);border-radius:99px;margin-top:8px;overflow:hidden}
+  .bar i{display:block;height:100%;background:var(--gold);width:0;transition:width .35s ease}
+
+  /* Setup banner */
+  .setup{background:var(--card);border:1px solid var(--line);border-radius:14px;margin-top:16px;overflow:hidden;box-shadow:var(--shadow)}
+  .setup summary{list-style:none;cursor:pointer;padding:13px 15px;display:flex;align-items:center;gap:10px;font-weight:600;font-size:14px}
+  .setup summary::-webkit-details-marker{display:none}
+  .dot{width:9px;height:9px;border-radius:50%;background:#c9bcae;flex:none;box-shadow:0 0 0 3px rgba(0,0,0,.04)}
+  .dot.on{background:var(--adv);box-shadow:0 0 0 3px rgba(47,125,82,.15)}
+  .setup .body{padding:0 15px 15px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  .setup ol{margin:12px 0;padding-left:20px}
+  .setup li{margin:4px 0}
+  .setup code{background:var(--paper);border:1px solid var(--line);padding:1px 6px;border-radius:6px;font-size:12px;color:var(--burgundy)}
+  .setup textarea{width:100%;border:1px solid var(--line);border-radius:10px;padding:10px;font-family:inherit;font-size:13px;margin-top:6px;resize:vertical;min-height:54px}
+  .setup .row{display:flex;gap:8px;margin-top:8px;align-items:center}
+  .btn{font-family:inherit;font-weight:600;border:none;border-radius:10px;padding:10px 14px;font-size:13px;cursor:pointer;transition:transform .08s ease,filter .15s ease}
+  .btn:active{transform:scale(.97)}
+  .btn.p{background:var(--burgundy);color:#fff}
+  .btn.g{background:var(--gold);color:var(--burgundy-dk)}
+  .btn.ghost{background:transparent;border:1px solid var(--line);color:var(--muted)}
+  .setupmsg{font-size:12.5px;font-weight:600;margin-left:2px}
+
+  /* Roster */
+  .sech{font-family:'Fraunces',serif;font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:22px 4px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);margin-bottom:11px;overflow:hidden}
+  .row-s{display:flex;align-items:stretch;cursor:pointer;transition:background .12s}
+  .row-s:active{background:#fbf6ee}
+  .stripe{width:6px;flex:none;background:#d9ccbd}
+  .row-s .mid{padding:12px 13px;flex:1;min-width:0}
+  .nm{font-weight:700;font-size:15.5px;letter-spacing:.1px}
+  .pj{font-size:12.7px;color:var(--muted);margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+  .meta{font-size:11px;color:#9b8d82;margin-top:4px;font-weight:500}
+  .row-s .end{display:flex;align-items:center;padding:0 13px;flex:none}
+  .chip{font-size:11px;font-weight:700;padding:5px 10px;border-radius:99px;white-space:nowrap}
+  .chip.none{background:#efe7db;color:#9b8d82}
+  .chip.Advanced{background:var(--adv-bg);color:var(--adv)}
+  .chip.Proficient{background:var(--pro-bg);color:var(--pro)}
+  .chip.Intermediate{background:var(--int-bg);color:var(--int)}
+  .chip.Beginning{background:var(--beg-bg);color:var(--beg)}
+  .row-s.graded{background:#fbf7f0}
+  /* project groups */
+  .pgroup{margin:18px 0 0}
+  .phead{display:flex;align-items:center;gap:10px;padding:10px 13px;border-radius:12px;color:#fff;box-shadow:var(--shadow)}
+  .phead .pt{font-family:'Fraunces',serif;font-weight:600;font-size:14.5px;flex:1;min-width:0;line-height:1.25}
+  .phead .pc{font-size:11.5px;font-weight:700;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:99px;white-space:nowrap;flex:none}
+  .pgroup .card{margin:9px 0 0 12px}
+
+  /* Detail */
+  #detail{display:none}
+  .back{display:inline-flex;align-items:center;gap:6px;background:none;border:none;color:var(--burgundy);font-family:inherit;font-weight:600;font-size:14px;padding:16px 4px 8px;cursor:pointer}
+  .dhead{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+  .dhead h2{font-family:'Fraunces',serif;font-size:21px;margin:0;font-weight:600}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+  .tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;background:var(--paper);border:1px solid var(--line);color:var(--muted)}
+  .tag.cls{background:var(--burgundy);color:#fff;border-color:var(--burgundy)}
+  .pjfull{font-size:13.5px;color:#3f3531;margin-top:11px;padding-top:11px;border-top:1px dashed var(--line)}
+  .pjfull b{color:var(--burgundy)}
+  .collab{font-size:12px;color:var(--muted);margin-top:6px}
+  .warn{font-size:12px;color:var(--beg);font-weight:600;margin-top:7px}
+
+  .crit{font-family:'Fraunces',serif;font-size:14px;font-weight:600;margin:20px 4px 4px}
+  .critsub{font-size:11.5px;color:var(--muted);margin:0 4px 12px;font-weight:500}
+  .levels{display:flex;flex-direction:column;gap:9px}
+  .lv{border:1.5px solid var(--line);border-radius:13px;padding:12px 13px;cursor:pointer;background:var(--card);transition:border-color .12s,background .12s,transform .08s}
+  .lv:active{transform:scale(.99)}
+  .lv .lvh{display:flex;align-items:center;gap:9px}
+  .lv .mk{width:20px;height:20px;border-radius:50%;border:2px solid #cdbfb0;flex:none;display:flex;align-items:center;justify-content:center;transition:.12s}
+  .lv .mk svg{width:12px;height:12px;opacity:0;transform:scale(.5);transition:.15s}
+  .lv .ttl{font-weight:700;font-size:14.5px}
+  .lv .desc{font-size:12px;color:var(--muted);margin-top:6px;padding-left:29px}
+  .lv[data-k="Advanced"].sel{border-color:var(--adv);background:var(--adv-bg)}
+  .lv[data-k="Proficient"].sel{border-color:var(--pro);background:var(--pro-bg)}
+  .lv[data-k="Intermediate"].sel{border-color:var(--int);background:var(--int-bg)}
+  .lv[data-k="Beginning"].sel{border-color:var(--beg);background:var(--beg-bg)}
+  .lv.sel .mk{border-color:currentColor}
+  .lv[data-k="Advanced"].sel .mk{background:var(--adv);color:#fff}
+  .lv[data-k="Proficient"].sel .mk{background:var(--pro);color:#fff}
+  .lv[data-k="Intermediate"].sel .mk{background:var(--int);color:#fff}
+  .lv[data-k="Beginning"].sel .mk{background:var(--beg);color:#fff}
+  .lv.sel .mk svg{opacity:1;transform:scale(1)}
+  .lv[data-k="Advanced"].sel .ttl{color:var(--adv)}
+  .lv[data-k="Proficient"].sel .ttl{color:var(--pro)}
+  .lv[data-k="Intermediate"].sel .ttl{color:var(--int)}
+  .lv[data-k="Beginning"].sel .ttl{color:var(--beg)}
+
+  .fbh{display:flex;align-items:baseline;justify-content:space-between;margin:22px 4px 8px}
+  .fbh .crit{margin:0}
+  .fbh small{font-size:11px;color:var(--muted)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+  .fc{font-size:12px;font-weight:600;padding:7px 11px;border-radius:99px;border:1px solid var(--line);background:var(--card);cursor:pointer;color:#4a3f3a;transition:transform .08s}
+  .fc:active{transform:scale(.95)}
+  .fc.pos{border-color:#cfe6d8;background:var(--adv-bg);color:var(--adv)}
+  .fc.con{border-color:#ecd6cf;background:var(--beg-bg);color:var(--beg)}
+  #fb,#gfb{width:100%;border:1.5px solid var(--line);border-radius:13px;padding:13px;font-family:inherit;font-size:14px;min-height:96px;resize:vertical;background:var(--card)}
+  #fb:focus,#gfb:focus{outline:none;border-color:var(--burgundy)}
+  .phead{cursor:pointer}
+  .phead .go{font-size:21px;font-weight:700;opacity:.85;flex:none;line-height:1}
+  #group{display:none}
+  .applybtn{width:100%;margin-top:16px;padding:15px;font-size:15px}
+  .grpapply{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+  .grpapply p{font-size:12.5px;color:var(--muted);margin:0 0 9px}
+  .grpapply .btn{width:100%;padding:13px;font-size:13.5px}
+
+  /* Action bar */
+  .actbar{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(255,253,249,.94);backdrop-filter:blur(8px);border-top:1px solid var(--line);padding:11px 16px calc(11px + env(safe-area-inset-bottom));display:none}
+  .actbar.show{display:block}
+  .actin{max-width:560px;margin:0 auto;display:flex;gap:9px}
+  .actbar .btn{flex:1;padding:14px;font-size:14.5px;display:flex;align-items:center;justify-content:center;gap:7px}
+
+  /* Footer tools */
+  .tools{display:flex;gap:9px;margin-top:26px}
+  .tools .btn{flex:1;padding:13px}
+  .ft{text-align:center;font-size:11px;color:#a99c90;margin-top:18px}
+
+  /* toast */
+  #toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:99px;font-size:13px;font-weight:600;opacity:0;pointer-events:none;transition:.25s;z-index:60;box-shadow:0 8px 30px rgba(0,0,0,.3);max-width:90%;text-align:center}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hwrap">
+    <div class="crest">FIS</div>
+    <div class="htxt">
+      <h1>Taking Action — Grader</h1>
+      <p id="hsub">Empathy to Impact · PE / Health</p>
+    </div>
+    <div class="prog">
+      <div class="n"><span id="done">0</span>/<span id="total">0</span></div>
+      <div class="l">graded</div>
+    </div>
+  </div>
+  <div class="bar"><i id="barfill"></i></div>
+</header>
+
+<div class="wrap">
+
+  <!-- ROSTER VIEW -->
+  <div id="roster">
+    <details class="setup" id="setup">
+      <summary><span class="dot" id="cfgdot"></span><span id="cfglabel">Set up one-tap form filling (optional)</span></summary>
+      <div class="body">
+        <p>Without setup, <b>Open form</b> still opens the form and copies your feedback to paste. To make it fill the student, grade &amp; feedback automatically:</p>
+        <ol>
+          <li>Open your Google Form &rarr; tap <code>⋮</code> (top right) &rarr; <b>Get pre-filled link</b></li>
+          <li>Set Student = <code>Adler, Mats</code>, Grade = <code>Advanced</code>, Feedback = <code>TESTFEEDBACK</code></li>
+          <li>Tap <b>Get link</b> &rarr; <b>Copy link</b>, then paste it below</li>
+        </ol>
+        <textarea id="cfgin" placeholder="Paste the pre-filled link here…"></textarea>
+        <div class="row">
+          <button class="btn p" onclick="saveCfg()">Enable</button>
+          <button class="btn ghost" onclick="clearCfg()">Clear</button>
+          <span class="setupmsg" id="cfgmsg"></span>
+        </div>
+      </div>
+    </details>
+
+    <div class="sech">Grouped by project · <span id="rcount"></span> students</div>
+    <div id="list"></div>
+
+    <div class="tools">
+      <button class="btn g" onclick="copyAll()">Copy all feedback</button>
+      <button class="btn p" onclick="exportCsv()">Export CSV</button>
+    </div>
+    <div class="ft">Saved on this device as you go. Showcase: 2:20–3:10, whole period.</div>
+  </div>
+
+  <!-- DETAIL VIEW -->
+  <div id="detail">
+    <button class="back" onclick="showRoster()">← All students</button>
+    <div class="dhead">
+      <h2 id="dname"></h2>
+      <div class="tags" id="dtags"></div>
+      <div class="pjfull" id="dpj"></div>
+      <div class="collab" id="dcollab"></div>
+      <div class="warn" id="dwarn"></div>
+    </div>
+
+    <div class="crit">PE.G6‑10.K1 — Health promotion &amp; disease prevention (HEAL)</div>
+    <div class="critsub">Grade on what they achieved. The action focus matters most, but credit the other strands too.</div>
+    <div class="levels" id="levels"></div>
+
+    <div class="fbh">
+      <div class="crit">Feedback</div>
+      <small>one win + one next step · keep it short</small>
+    </div>
+    <div class="chips" id="chips"></div>
+    <textarea id="fb" placeholder="Tap a chip above or type…"></textarea>
+    <div class="grpapply" id="grpapply" style="display:none">
+      <p id="grptext"></p>
+      <button class="btn g" onclick="applyFromStudent()">Apply this grade &amp; feedback to the group</button>
+    </div>
+  </div>
+
+  <!-- GROUP VIEW -->
+  <div id="group">
+    <button class="back" onclick="showRoster()">← All students</button>
+    <div class="dhead">
+      <h2 id="gname"></h2>
+      <div class="pjfull" id="gpj"></div>
+      <div class="tags" id="gmembers" style="margin-top:11px"></div>
+    </div>
+
+    <div class="crit">PE.G6‑10.K1 — Health promotion &amp; disease prevention (HEAL)</div>
+    <div class="critsub">Set a shared grade &amp; feedback for the whole group. Adjust any individual afterwards from their card.</div>
+    <div class="levels" id="glevels"></div>
+
+    <div class="fbh">
+      <div class="crit">Feedback</div>
+      <small>applies to all members</small>
+    </div>
+    <div class="chips" id="gchips"></div>
+    <textarea id="gfb" placeholder="Shared feedback for the group…"></textarea>
+
+    <button class="btn p applybtn" id="applybtn" onclick="applyGroup()">Apply to all</button>
+    <div class="ft">This overwrites every member with these values. Tweak exceptions after.</div>
+  </div>
+
+</div>
+
+<!-- ACTION BAR -->
+<div class="actbar" id="actbar">
+  <div class="actin">
+    <button class="btn ghost" onclick="copyFb()">Copy feedback</button>
+    <button class="btn p" id="openbtn" onclick="openForm()">Open form ↗</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+/* ============ DATA: Bain's interdisciplinary students ============ */
+const STUDENTS = [
+  {n:"Beumer, Noor", sec:"07A", cls:"PE", pj:"School-based campaign to increase cycling & sustainable commuting.", col:"Emma Lee, Carolina G‑E, Josephine", warn:"Document needs sharing — chase before grading."},
+  {n:"Braun, Cecilia", sec:"01B", cls:"PE", pj:"Direct service to improve elderly wellbeing through interaction & tech support.", col:"Victoria, Carolina"},
+  {n:"Gorjinia-Enkelmann, Carolina", sec:"07A", cls:"PE", pj:"School-based campaign to increase cycling & sustainable commuting.", col:"Emma Lee, Noor, Josephine", warn:"Document needs sharing — chase before grading."},
+  {n:"Jeong, So-Yoon", sec:"7", cls:"PE", pj:"Creating a 'Feeling Mailbox' in school.", col:"Seohyun"},
+  {n:"Kim, Hun", sec:"2", cls:"PE", pj:"Charity games where you donate equipment to play; gathered gear sent to local clubs to distribute worldwide.", col:"Andrew, Sean, Rooney"},
+  {n:"Lee, Emma", sec:"01B", cls:"PE", pj:"School-based campaign to increase cycling & sustainable commuting.", col:"Josephine, Carolina, Noor"},
+  {n:"Ling, Kate", sec:"2", cls:"PE", pj:"Digital student handbook on stress management, mental wellbeing, healthy lifestyle & everyday skills.", col:"—"},
+  {n:"Shigemoto, Leo", sec:"7", cls:"PE", pj:"Collect sports equipment for an African sports club.", col:"Yuri, Biel"},
+  {n:"Song, Hayun", sec:"07A", cls:"PE", pj:"Asking students to donate hair to Locks of Love for child cancer patients.", col:"Sasha, Maddie"},
+  {n:"Szydlik, Maddie", sec:"01A", cls:"PE", pj:"Asking students to donate hair to Locks of Love for child cancer patients.", col:"Sasha Trebel, Hayun Song"},
+  {n:"Trebel, Sasha", sec:"01A", cls:"PE", pj:"Asking students to donate hair to Locks of Love for child cancer patients.", col:"Maddie Szydlik, Hayun Song"},
+  {n:"Viswat, Daan", sec:"04A", cls:"Health", pj:"Bike to School campaign (survey-driven).", col:"George Hartings"},
+  {n:"Rinnert, Pauline", sec:"2", cls:"Health", pj:"Working at the Primary School with Lea Karr.", col:"Cora, Mia"},
+  {n:"Blenke, William", sec:"04A", cls:"Health", pj:"Food drive for shelf-stable food + collecting pots & pans from a local source.", col:"Adric, Leopold"},
+  {n:"Markelin, Leopold", sec:"04A", cls:"Health", pj:"Food drive for shelf-stable food + collecting pots & pans from a local source.", col:"William, Adric"},
+  {n:"Kaganovich, Sara", sec:"04B", cls:"PE · Sci", pj:"Mental health & stress awareness: survey + visit to Gr 7 advisories.", col:"— (co-assessed w/ Gould)"},
+];
+
+const LEVELS = [
+  {k:"Advanced", d:"Clearly explains staying healthy in body, mind & relationships, linking to real-world issues and specific UN SDGs · shows why health matters beyond themselves · plans & takes meaningful action that improves others' health · backs ideas with clear examples/research/evidence."},
+  {k:"Proficient", d:"Explains staying healthy in body, mind & relationships and links to real-world issues or SDGs · shows understanding of why health matters for others · plans & takes action that supports others' health · supports ideas with some examples/evidence."},
+  {k:"Intermediate", d:"Describes basic ways to stay healthy · makes simple/general links to global issues or SDGs · takes part in some service but impact may be limited · explanations may be basic or not fully clear."},
+  {k:"Beginning", d:"Identifies a few ideas about staying healthy · finds it difficult to connect learning to global issues/SDGs · needs support to take part in service/action · explanations unclear or incomplete."},
+];
+
+const POS = ["Took real action that helps others","Clear link to a real-world issue / SDG","Showed why health matters beyond themselves","Backed ideas with examples / evidence","Genuine service impact, not just awareness","Explained the health benefit clearly"];
+const CON = ["Link the action to a specific SDG","Show evidence the action actually happened","Explain the health benefit more clearly","Aim for lasting impact, not a one-off","Add data / examples to support claims","Clarify your own role in the group"];
+
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSefUNbUuwTMoMZtgC8Addd8rnFg-UhMq7smzul7r6Wt_Y9K0Q/viewform";
+
+/* ============ Project groups (display order: groups first, then singles) ============ */
+const PROJECTS = [
+  {t:"Cycling & sustainable commuting campaign", c:"#2b6e8f", m:["Beumer, Noor","Gorjinia-Enkelmann, Carolina","Lee, Emma"]},
+  {t:"Locks of Love — hair donation for child cancer patients", c:"#9b3f86", m:["Song, Hayun","Szydlik, Maddie","Trebel, Sasha"]},
+  {t:"Food drive — shelf-stable food + pots & pans", c:"#a64b3c", m:["Blenke, William","Markelin, Leopold"]},
+  {t:"Elderly wellbeing — interaction & tech support", c:"#8a5a2b", m:["Braun, Cecilia"]},
+  {t:"Feeling Mailbox", c:"#b1506e", m:["Jeong, So-Yoon"]},
+  {t:"Charity games → equipment to local clubs worldwide", c:"#c2702f", m:["Kim, Hun"]},
+  {t:"Digital student wellbeing handbook", c:"#4a5a9e", m:["Ling, Kate"]},
+  {t:"Sports equipment for an African sports club", c:"#5f7d3a", m:["Shigemoto, Leo"]},
+  {t:"Bike to School campaign", c:"#2f8f7d", m:["Viswat, Daan"]},
+  {t:"Working at the Primary School (Lea Karr)", c:"#7a6f2e", m:["Rinnert, Pauline"]},
+  {t:"Mental health & stress awareness — G7 advisories", c:"#5a4e8a", m:["Kaganovich, Sara"]},
+];
+const NAME2IDX = {}, NAME2PROJ = {};
+STUDENTS.forEach((s,i)=>NAME2IDX[s.n]=i);
+PROJECTS.forEach((p,pi)=>p.m.forEach(n=>NAME2PROJ[n]=pi));
+
+/* ============ Storage (resilient) ============ */
+const KEY="ta_grader_v1", CKEY="ta_grader_cfg_v1";
+let mem={}, memCfg=null;
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY))||{} }catch(e){ return mem } }
+function save(d){ try{ localStorage.setItem(KEY,JSON.stringify(d)) }catch(e){ mem=d } }
+function loadCfg(){ try{ return JSON.parse(localStorage.getItem(CKEY)) }catch(e){ return memCfg } }
+function saveCfgObj(c){ try{ localStorage.setItem(CKEY,JSON.stringify(c)) }catch(e){ memCfg=c } }
+
+let data = load();
+let cfg = loadCfg();
+let current = null;
+
+/* ============ Render roster ============ */
+function renderRoster(){
+  const list=document.getElementById('list');
+  list.innerHTML='';
+  PROJECTS.forEach((p,pi)=>{
+    const g=document.createElement('div');
+    g.className='pgroup';
+    const gradedN=p.m.filter(n=>data[n]&&data[n].level).length;
+    g.innerHTML=`<div class="phead" style="background:${p.c}" onclick="headTap(${pi})">
+        <div class="pt">${p.t}</div>
+        <div class="pc">${gradedN}/${p.m.length}</div>
+        <div class="go">›</div>
+      </div>`;
+    p.m.forEach(n=>{
+      const i=NAME2IDX[n], s=STUDENTS[i], rec=data[n]||{}, lv=rec.level||'';
+      const card=document.createElement('div');
+      card.className='card';
+      card.innerHTML=`
+        <div class="row-s ${lv?'graded':''}" onclick="openStudent(${i})">
+          <div class="stripe" style="background:${p.c}"></div>
+          <div class="mid">
+            <div class="nm">${s.n}</div>
+            <div class="meta">${s.cls} · Hum ${s.sec}${s.warn?' · ⚠ doc to share':''}</div>
+          </div>
+          <div class="end"><span class="chip ${lv||'none'}">${lv||'—'}</span></div>
+        </div>`;
+      g.appendChild(card);
+    });
+    list.appendChild(g);
+  });
+  document.getElementById('rcount').textContent=STUDENTS.length;
+  document.getElementById('total').textContent=STUDENTS.length;
+  const done=STUDENTS.filter(s=>data[s.n]&&data[s.n].level).length;
+  document.getElementById('done').textContent=done;
+  document.getElementById('barfill').style.width=(done/STUDENTS.length*100)+'%';
+  updateCfgUI();
+}
+
+/* ============ Detail ============ */
+function openStudent(i){
+  current=i;
+  const s=STUDENTS[i], rec=data[s.n]||{};
+  document.getElementById('dname').textContent=s.n;
+  document.getElementById('dtags').innerHTML=
+    `<span class="tag cls">${s.cls}</span><span class="tag">Hum ${s.sec}</span>`;
+  document.getElementById('dpj').innerHTML=`<b>Project:</b> ${s.pj}`;
+  document.getElementById('dcollab').textContent= s.col&&s.col!=='—' ? 'With: '+s.col : '';
+  document.getElementById('dwarn').textContent= s.warn||'';
+
+  const lvWrap=document.getElementById('levels');
+  lvWrap.innerHTML='';
+  LEVELS.forEach(L=>{
+    const sel = rec.level===L.k ? 'sel':'';
+    const el=document.createElement('div');
+    el.className='lv '+sel;
+    el.dataset.k=L.k;
+    el.onclick=()=>pickLevel(L.k);
+    el.innerHTML=`
+      <div class="lvh">
+        <span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span>
+        <span class="ttl">${L.k}</span>
+      </div>
+      <div class="desc">${L.d}</div>`;
+    lvWrap.appendChild(el);
+  });
+
+  buildChips('chips','fb');
+
+  document.getElementById('fb').value=rec.fb||'';
+  document.getElementById('openbtn').textContent = cfg ? 'Open prefilled ↗' : 'Open form ↗';
+
+  const grp=PROJECTS[NAME2PROJ[s.n]], ga=document.getElementById('grpapply');
+  if(grp.m.length>1){
+    ga.style.display='block';
+    document.getElementById('grptext').textContent=`${grp.m.length}-person project. Push this grade & feedback to all ${grp.m.length}? (You can still tweak each one after.)`;
+  } else ga.style.display='none';
+
+  document.getElementById('roster').style.display='none';
+  document.getElementById('detail').style.display='block';
+  document.getElementById('actbar').classList.add('show');
+  window.scrollTo(0,0);
+}
+function buildChips(wrapId,targetId){
+  const wrap=document.getElementById(wrapId); wrap.innerHTML='';
+  const add=(t,kind)=>{
+    const b=document.createElement('button'); b.className='fc '+kind; b.textContent=t;
+    b.onclick=()=>{ const fb=document.getElementById(targetId); const pre=fb.value.trim(); fb.value=(pre?pre+"\n":"")+"• "+t; if(targetId==='fb')persist(); };
+    wrap.appendChild(b);
+  };
+  POS.forEach(t=>add(t,'pos')); CON.forEach(t=>add(t,'con'));
+}
+function pickLevel(k){
+  const s=STUDENTS[current];
+  data[s.n]=data[s.n]||{}; data[s.n].level=k; save(data);
+  document.querySelectorAll('.lv').forEach(el=>el.classList.toggle('sel',el.dataset.k===k));
+  toast(k+' set');
+}
+function persist(){
+  if(current===null)return;
+  const s=STUDENTS[current];
+  data[s.n]=data[s.n]||{}; data[s.n].fb=document.getElementById('fb').value; save(data);
+}
+document.getElementById('fb').addEventListener('input',persist);
+
+function showRoster(){
+  persist();
+  document.getElementById('detail').style.display='none';
+  document.getElementById('group').style.display='none';
+  document.getElementById('actbar').classList.remove('show');
+  document.getElementById('roster').style.display='block';
+  renderRoster();
+}
+
+/* ============ Group grading ============ */
+const GKEY="ta_grader_gdef_v1"; let memG={};
+function loadG(){ try{ return JSON.parse(localStorage.getItem(GKEY))||{} }catch(e){ return memG } }
+function saveG(d){ try{ localStorage.setItem(GKEY,JSON.stringify(d)) }catch(e){ memG=d } }
+let gdef=loadG(), curGroup=null, gLevel='';
+
+function headTap(pi){
+  const p=PROJECTS[pi];
+  if(p.m.length>1) openGroup(pi);
+  else openStudent(NAME2IDX[p.m[0]]);
+}
+function openGroup(pi){
+  curGroup=pi; const p=PROJECTS[pi]; const def=gdef[p.t]||{};
+  gLevel=def.level||'';
+  document.getElementById('gname').textContent=p.t;
+  document.getElementById('gpj').innerHTML=`<b>${p.m.length} students</b> · one grade &amp; feedback for all, then tweak individuals if needed.`;
+  document.getElementById('gmembers').innerHTML=p.m.map(n=>`<span class="tag">${n}</span>`).join('');
+  const wrap=document.getElementById('glevels'); wrap.innerHTML='';
+  LEVELS.forEach(L=>{
+    const el=document.createElement('div'); el.className='lv '+(gLevel===L.k?'sel':''); el.dataset.k=L.k;
+    el.onclick=()=>pickGroupLevel(L.k);
+    el.innerHTML=`<div class="lvh"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg></span><span class="ttl">${L.k}</span></div><div class="desc">${L.d}</div>`;
+    wrap.appendChild(el);
+  });
+  buildChips('gchips','gfb');
+  document.getElementById('gfb').value=def.fb||'';
+  document.getElementById('applybtn').textContent='Apply to all '+p.m.length;
+  document.getElementById('roster').style.display='none';
+  document.getElementById('detail').style.display='none';
+  document.getElementById('actbar').classList.remove('show');
+  document.getElementById('group').style.display='block';
+  window.scrollTo(0,0);
+}
+function pickGroupLevel(k){
+  gLevel=k;
+  document.querySelectorAll('#glevels .lv').forEach(el=>el.classList.toggle('sel',el.dataset.k===k));
+}
+function applyToGroup(pi,level,fb){
+  const p=PROJECTS[pi];
+  p.m.forEach(n=>{ data[n]=data[n]||{}; if(level)data[n].level=level; data[n].fb=fb; });
+  save(data);
+  gdef[p.t]={level:level,fb:fb}; saveG(gdef);
+}
+function applyGroup(){
+  const p=PROJECTS[curGroup];
+  applyToGroup(curGroup, gLevel, document.getElementById('gfb').value);
+  toast('Applied to all '+p.m.length); showRoster();
+}
+function applyFromStudent(){
+  const s=STUDENTS[current], pi=NAME2PROJ[s.n], rec=data[s.n]||{};
+  applyToGroup(pi, rec.level||'', document.getElementById('fb').value);
+  toast('Applied to all '+PROJECTS[pi].m.length); showRoster();
+}
+
+/* ============ Open form ============ */
+function openForm(){
+  persist();
+  const s=STUDENTS[current], rec=data[s.n]||{};
+  let url=FORM_URL;
+  if(cfg){
+    url = cfg.base+"?usp=pp_url"
+      + "&"+cfg.student+"="+encodeURIComponent(s.n)
+      + (rec.level?"&"+cfg.grade+"="+encodeURIComponent(rec.level):"")
+      + (rec.fb?"&"+cfg.fb+"="+encodeURIComponent(rec.fb):"");
+  } else {
+    copyText(rec.fb||'');
+    toast("Feedback copied — pick "+s.n.split(',')[0]+" & the grade");
+  }
+  window.open(url,'_blank');
+}
+function copyFb(){
+  const s=STUDENTS[current], rec=data[s.n]||{};
+  copyText(rec.fb||''); toast('Feedback copied');
+}
+
+/* ============ Config (prefill) ============ */
+function saveCfg(){
+  const raw=document.getElementById('cfgin').value.trim();
+  if(!raw){ setMsg('Paste the link first','con'); return; }
+  try{
+    const u=new URL(raw);
+    const base=u.origin+u.pathname;
+    if(!base.includes('/viewform')) throw 0;
+    let student,grade,fb;
+    u.searchParams.forEach((v,k)=>{
+      if(!k.startsWith('entry.'))return;
+      if(v==='Adler, Mats')student=k;
+      else if(v==='Advanced')grade=k;
+      else if(v==='TESTFEEDBACK')fb=k;
+    });
+    if(!student||!grade||!fb) throw 1;
+    cfg={base,student,grade,fb}; saveCfgObj(cfg);
+    setMsg('Prefill enabled ✓','pos'); updateCfgUI();
+    document.getElementById('cfgin').value='';
+  }catch(e){
+    setMsg('Could not read that link — check the 3 sentinel values','con');
+  }
+}
+function clearCfg(){ cfg=null; try{localStorage.removeItem(CKEY)}catch(e){memCfg=null} setMsg('Cleared','con'); updateCfgUI(); }
+function setMsg(t,kind){ const m=document.getElementById('cfgmsg'); m.textContent=t; m.style.color= kind==='pos'?'var(--adv)':'var(--beg)'; }
+function updateCfgUI(){
+  const on=!!cfg;
+  document.getElementById('cfgdot').classList.toggle('on',on);
+  document.getElementById('cfglabel').textContent = on ? 'One-tap form filling is ON' : 'Set up one-tap form filling (optional)';
+}
+
+/* ============ Export ============ */
+function copyAll(){
+  let out="Taking Action — Teacher Feedback (Bain)\n\n";
+  PROJECTS.forEach(p=>{
+    out+=`=== ${p.t} ===\n`;
+    p.m.forEach(n=>{ const r=data[n]||{}; out+=`${n} [${r.level||'—'}]\n${(r.fb||'(no feedback)')}\n\n`; });
+  });
+  copyText(out); toast('All feedback copied');
+}
+function exportCsv(){
+  let rows=[['Project','Student','Level','Feedback']];
+  PROJECTS.forEach(p=>p.m.forEach(n=>{ const r=data[n]||{}; rows.push([p.t,n,r.level||'',(r.fb||'').replace(/\n/g,' / ')]); }));
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='taking-action-grades.csv'; a.click();
+  toast('CSV downloaded');
+}
+
+/* ============ utils ============ */
+function copyText(t){
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).catch(()=>fallbackCopy(t));}
+  else fallbackCopy(t);
+}
+function fallbackCopy(t){ const ta=document.createElement('textarea'); ta.value=t; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy')}catch(e){} ta.remove(); }
+let tT;
+function toast(m){ const el=document.getElementById('toast'); el.textContent=m; el.classList.add('show'); clearTimeout(tT); tT=setTimeout(()=>el.classList.remove('show'),1700); }
+
+renderRoster();
+</script>
+</body>
+</html>
