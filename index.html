@@ -21,6 +21,7 @@
     --pro:#2b6e8f; --pro-bg:#e6f1f6;
     --int:#b5841f; --int-bg:#fbf2dd;
     --beg:#a64b3c; --beg-bg:#f8e9e5;
+    --ne:#5f5b57; --ne-bg:#eae7e3;
     --shadow:0 1px 2px rgba(34,27,24,.06),0 8px 24px rgba(34,27,24,.08);
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -181,6 +182,10 @@
   .lv[data-k="Proficient"].sel .ttl{color:var(--pro)}
   .lv[data-k="Intermediate"].sel .ttl{color:var(--int)}
   .lv[data-k="Beginning"].sel .ttl{color:var(--beg)}
+  .chip.NoEvidence{background:var(--ne-bg);color:var(--ne)}
+  .lv[data-k="No Evidence"].sel{border-color:var(--ne);background:var(--ne-bg)}
+  .lv[data-k="No Evidence"].sel .mk{background:var(--ne);color:#fff}
+  .lv[data-k="No Evidence"].sel .ttl{color:var(--ne)}
 
   .fbh{display:flex;align-items:baseline;justify-content:space-between;margin:22px 4px 8px}
   .fbh .crit{margin:0}
@@ -358,7 +363,9 @@ const LEVELS = [
   {k:"Proficient", d:"Explains staying healthy in body, mind & relationships and links to real-world issues or SDGs · shows understanding of why health matters for others · plans & takes action that supports others' health · supports ideas with some examples/evidence."},
   {k:"Intermediate", d:"Describes basic ways to stay healthy · makes simple/general links to global issues or SDGs · takes part in some service but impact may be limited · explanations may be basic or not fully clear."},
   {k:"Beginning", d:"Identifies a few ideas about staying healthy · finds it difficult to connect learning to global issues/SDGs · needs support to take part in service/action · explanations unclear or incomplete."},
+  {k:"No Evidence", d:"No interdisciplinary connection shown — nothing to assess against this outcome yet. Record it and flag for follow-up."},
 ];
+const FORM_LEVELS = ["Advanced","Proficient","Intermediate","Beginning"]; // options that exist on the Google Form
 
 const POS = ["Took real action that helps others","Clear link to a real-world issue / SDG","Showed why health matters beyond themselves","Backed ideas with examples / evidence","Genuine service impact, not just awareness","Explained the health benefit clearly"];
 const CON = ["Link the action to a specific SDG","Show evidence the action actually happened","Explain the health benefit more clearly","Aim for lasting impact, not a one-off","Add data / examples to support claims","Clarify your own role in the group"];
@@ -420,7 +427,7 @@ function renderRoster(){
             <div class="nm">${s.n}</div>
             <div class="meta">${s.cls} · Hum ${s.sec}${s.warn?' · ⚠ doc to share':''}</div>
           </div>
-          <div class="end"><span class="chip ${lv||'none'}">${lv||'—'}</span></div>
+          <div class="end"><span class="chip ${lv?lv.replace(/\s+/g,''):'none'}">${lv||'—'}</span></div>
         </div>`;
       g.appendChild(card);
     });
@@ -575,12 +582,13 @@ function openForm(){
   if(cfg){
     url = cfg.base+"?usp=pp_url"
       + "&"+cfg.student+"="+encodeURIComponent(s.n)
-      + (rec.level?"&"+cfg.grade+"="+encodeURIComponent(rec.level):"")
+      + (rec.level && FORM_LEVELS.includes(rec.level) ? "&"+cfg.grade+"="+encodeURIComponent(rec.level):"")
       + (rec.fb?"&"+cfg.fb+"="+encodeURIComponent(rec.fb):"");
   } else {
     copyText(rec.fb||'');
     toast("Feedback copied — pick "+s.n.split(',')[0]+" & the grade");
   }
+  if(rec.level==="No Evidence") toast("No 'No Evidence' on the form — set the grade there manually");
   window.open(url,'_blank');
 }
 function copyFb(){
